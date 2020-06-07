@@ -10,12 +10,26 @@
 </template>
 
 <script>
+const UPDATE_URL = 'https://af-vue-todos.azurewebsites.net/api/updateTodo';
 export default {
     name: 'TodoItem',
     props: ['todo'],
     methods: {
-        checkTodo(){
+        async checkTodo(){
             this.todo.completed = !this.todo.completed
+            // Azure Functions
+            const data = await fetch(UPDATE_URL, {
+                method: 'POST',
+                body: JSON.stringify(this.todo),
+                headers: {
+                'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json());
+
+            if(data.result == 'success'){
+                console.log('todo updated');
+            }
         }
     }
 }

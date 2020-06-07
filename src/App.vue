@@ -19,16 +19,25 @@ import TodoAdd from './components/TodoAdd'
 //import axios from 'axios';
 
 const INSERT_URL = 'https://af-vue-todos.azurewebsites.net/api/insertTodo';
-const GET_URL = 'https://af-vue-todos.azurewebsites.net/api/getTodos';
+const GET_URL    = 'https://af-vue-todos.azurewebsites.net/api/getTodos';
+const DELETE_URL = 'https://af-vue-todos.azurewebsites.net/api/deleteTodo';
+
 
 export default {
   name: 'App',
   components: {Todos, Search, TodoAdd},
   methods:{
 
-    deleteTodo(id){
-      this.todos = this.todos.filter(todo => todo.id != id);
-      this.copyTodos = [...this.todos];
+    async deleteTodo(id){
+      // Azure Functions
+      const data = await fetch(DELETE_URL + '?id=' + id)
+      .then(res => res.json());
+
+      if(data.result == 'success'){
+        console.log('todo deleted');
+        this.todos = this.todos.filter(todo => todo.id != id);
+        this.copyTodos = [...this.todos];
+      }
     },
 
     async addTodo(todo){
