@@ -18,6 +18,9 @@ import Search from './components/Search'
 import TodoAdd from './components/TodoAdd'
 //import axios from 'axios';
 
+const INSERT_URL = 'https://af-vue-todos.azurewebsites.net/api/insertTodo';
+const GET_URL = 'https://af-vue-todos.azurewebsites.net/api/getTodos';
+
 export default {
   name: 'App',
   components: {Todos, Search, TodoAdd},
@@ -30,7 +33,7 @@ export default {
 
     async addTodo(todo){
       // Azure Functions
-      /*const data = await fetch('https://af-vue-todos.azurewebsites.net/api/insertTodo', {
+      const data = await fetch(INSERT_URL, {
         method: 'POST',
         body: JSON.stringify(todo),
         headers: {
@@ -41,10 +44,11 @@ export default {
 
       if(data.result == 'success'){
         console.log('todo inserted');
+        this.todos.push(todo);
+        this.copyTodos = [...this.todos];
       }
-      */
-      this.todos.push(todo);
-      this.copyTodos = [...this.todos];
+      
+      
     },
 
     queryChange(query){
@@ -67,17 +71,18 @@ export default {
    }
   },
   async created(){
-    this.copyTodos = [...this.todos];
+    //this.copyTodos = [...this.todos];
     
   },
 
  async mounted () {
     
-   /*  const data = await fetch('https://af-vue-todos.azurewebsites.net/api/getTodos')
+     const data = await fetch(GET_URL)
     .then(res => res.json());
 
     this.copyTodos = [...data];
-     */
+    this.todos = [...this.copyTodos];
+     
   }
 }
 </script>
